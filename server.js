@@ -376,11 +376,11 @@ console.log('Cron jobs initialized.');
 // Now that you specified how to handle messages, you can start your bo
 
 // Start the bot.
-bot.start({
+/*bot.start({
   // Make sure to specify the desired update types
   allowed_updates: ["chat_member", "my_chat_member"],
   
-});
+});*/
 
 
 
