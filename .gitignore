@@ -1,0 +1,4 @@
+.env
+.env.local
+.env.staging
+node_modules/
