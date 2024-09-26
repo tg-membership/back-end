@@ -64,6 +64,9 @@ const checkoutSubscription = asyncHandler(async (req, res) => {
   try {
     // Validate the input
     if (!userId || !communityId || !tier || !amount || !txHash) {
+      io.emit('paymentStatus', {
+        status : "FAILED",
+      });
       return res.status(400).json({ message: 'Missing required fields' });
     }
 
@@ -82,12 +85,136 @@ const checkoutSubscription = asyncHandler(async (req, res) => {
     const startTime = Math.floor(Date.now() / 1000).toString();
     const stopTime = Math.floor(Date.now() / 1000 + 60 * 60 * 24 * 30).toString();
 
-    // Step 2: Create the subscription (if needed)
+
+
+// Monitor transaction status
+const interval = setInterval(async () => {
+  //const status = await checkTransactionStatus(transactionHash);
+
+   
+     const  txResult  =  await  checkTxStatus(txHash)
+    console.log("the result status",  txResult)
+    console.log("transaction hash", txHash)
+
+  if (txResult === 'SUCCESS') {
+   
+
+    
+
+    // Notify user via email
+
+    const  OTP_TEMPLATE_UUID  = "7e201329-33cf-49cd-b879-69255081bd6f"
+
+    const recipients = [
+     {
+       email: user.email,
+     }
+   ];
+ 
+  /* await sendMail2(recipients, OTP_TEMPLATE_UUID, {
+    "amount": paymentSession.amount,
+    "currency": "HBAR",
+    "transaction_id": paymentSession.sessionId,
+    "payment_link": paymentSession.paymentLinkId,
+    "receiver_wallet": user.wallet,
+   });*/
+
+     // UPDATE_USER_DETAILS_AND_TX_STATUS
+
+       // Find and update the PaymentSession document
+   
+           // Step 2: Create the subscription (if needed)
     const newSubscription = await Subscription.create({
       userId,
       groupId: communityId,
       tier,
-      txHash : "example tx hash",
+      txHash : txHash,
+      startDate: new Date(parseInt(startTime) * 1000),
+      expiryDate: new Date(parseInt(stopTime) * 1000),
+      isActive: true
+    });
+
+  // Update payment status to 'completed' after the transaction
+  newPayment.status = 'completed';
+  newPayment.txHash = transactionHash;
+  await newPayment.save();
+
+      //console.log("updated payment  info and status", updatedPaymentSession)
+      clearInterval(interval);
+
+
+
+  // Emit real-time updates via Socket.io
+
+  io.emit('paymentStatus', {
+    status : "SUCCESS",
+    userId : userId,
+    communityId : communityId,
+    tier,
+    amount,
+    transactionHash
+  });
+
+    // Notify user via UI (e.g., via WebSocket or an update endpoint)
+    // ... your notification logic here ...
+  } else if (txResult === 'FAILED') { 
+    // UPDATE_PAYMENT_DETAILS_AND_TX_STATUS
+    
+        // Handle payment failure
+        await Payment.findByIdAndUpdate(newPayment._id, { status: 'failed' });
+
+
+    clearInterval(interval);
+    // Notify user via UI (e.g., via WebSocket or an update endpoint)
+    // ... your notification logic here ...
+    io.emit('paymentStatus', {
+      status : "FAILED",
+      userId : userId
+    });
+  }else if(new Date()   > paymentSession.durationTime  && paymentSession.paymentStatus === "pending" ){
+
+       // UPDATE_USER_DETAILS_AND_TX_STATUS
+
+        // Handle payment failure
+    await Payment.findByIdAndUpdate(newPayment._id, { status: 'failed' });
+   
+    clearInterval(interval);
+    // Notify user via UI (e.g., via WebSocket or an update endpoint)
+    // ... your notification logic here ...
+    io.emit('paymentStatus', {
+      status : "EXPIRED",
+      userId : userId
+    });
+
+  }
+}, 30000); // Check every 30 seconds  */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
+    // Step 2: Create the subscription (if needed)
+  /*  const newSubscription = await Subscription.create({
+      userId,
+      groupId: communityId,
+      tier,
+      txHash : txHash,
       startDate: new Date(parseInt(startTime) * 1000),
       expiryDate: new Date(parseInt(stopTime) * 1000),
       isActive: true
@@ -111,7 +238,7 @@ const checkoutSubscription = asyncHandler(async (req, res) => {
       tier,
       amount,
       transactionHash
-    });
+    });*/
 
     // Send the response back
     res.status(201).json({
