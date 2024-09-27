@@ -196,13 +196,12 @@ bot.on("my_chat_member",  async (ctx) => {
           // If the user is not registered, respond and do not proceed
           await   ctx.api.sendMessage(userInfo.id, "Please  register inour platform before adding to your group")
            ctx.reply(`Please register on the platform before adding me to your group.`);
+        }else {
+ // If the user exists, proceed to save the group info
+ console.log("User found, proceeding to save the group");
+ await saveCommunityInfo(chatInfo, userInfo, existingUser._id);
         }
-    
-        // If the user exists, proceed to save the group info
-        console.log("User found, proceeding to save the group");
-        await saveCommunityInfo(chatInfo, userInfo, existingUser._id);
-        
-      } catch (error) {
+     } catch (error) {
         console.error("Error checking user or saving group:", error);
         ctx.reply("There was an error processing your request.");
       }
@@ -283,7 +282,7 @@ async function sendReminder(userId, chatId, message) {
   }
 });  */
 
-cron.schedule('* * * * * *', async () => { // Run every minute
+cron.schedule('*/10 * * * *', async () => { // Run every minute
   //console.log('Running instant check for unpaid users...');
 
   const now = new Date();
@@ -376,11 +375,11 @@ console.log('Cron jobs initialized.');
 // Now that you specified how to handle messages, you can start your bo
 
 // Start the bot.
-bot.start({
+/*bot.start({
   // Make sure to specify the desired update types
   allowed_updates: ["chat_member", "my_chat_member"],
   
-});
+});*/
 
 
 

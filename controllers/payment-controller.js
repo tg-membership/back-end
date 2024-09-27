@@ -103,13 +103,13 @@ const interval = setInterval(async () => {
 
     // Notify user via email
 
-    const  OTP_TEMPLATE_UUID  = "7e201329-33cf-49cd-b879-69255081bd6f"
+ /*   const  OTP_TEMPLATE_UUID  = "7e201329-33cf-49cd-b879-69255081bd6f"
 
     const recipients = [
      {
        email: user.email,
      }
-   ];
+   ];*/
  
   /* await sendMail2(recipients, OTP_TEMPLATE_UUID, {
     "amount": paymentSession.amount,
@@ -152,7 +152,7 @@ const interval = setInterval(async () => {
     communityId : communityId,
     tier,
     amount,
-    transactionHash
+    transactionHash : txHash
   });
 
     // Notify user via UI (e.g., via WebSocket or an update endpoint)
