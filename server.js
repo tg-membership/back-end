@@ -86,9 +86,10 @@ const keyboard = InlineKeyboard.from([buttonRow]);*/
 
 // This will connect to the Telegram servers and wait for messages.
 
-// Handle the /start command.
+
+
 bot.command("start", (ctx) =>  {
- // console.log("the context", ctx.from.first_name)
+  console.log("the context", ctx.from.first_name)
   const userId = ctx.match
   console.log("user id from ctx", ctx.chat)
 
@@ -375,11 +376,9 @@ console.log('Cron jobs initialized.');
 // Now that you specified how to handle messages, you can start your bo
 
 // Start the bot.
-/*bot.start({
-  // Make sure to specify the desired update types
-  allowed_updates: ["chat_member", "my_chat_member"],
-  
-});*/
+bot.start({
+  allowed_updates: ["chat_member", "my_chat_member", "message" ],
+  });
 
 
 
