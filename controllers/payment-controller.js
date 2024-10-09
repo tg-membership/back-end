@@ -190,24 +190,6 @@ const interval = setInterval(async () => {
 }, 30000); // Check every 30 seconds  */
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       
     // Step 2: Create the subscription (if needed)
   /*  const newSubscription = await Subscription.create({
@@ -243,7 +225,6 @@ const interval = setInterval(async () => {
     // Send the response back
     res.status(201).json({
       message: 'Subscription created and payment completed successfully',
-      subscription: newSubscription,
       payment: newPayment
     });
 
