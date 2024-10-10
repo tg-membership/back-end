@@ -5,7 +5,7 @@ const Payment = require("../models/payment-schema")
 
 
 
-const getUserPaymentSession =  asyncHandler (async (req, res)  =>  {
+/*const getUserPaymentSession =  asyncHandler (async (req, res)  =>  {
 const  {userId} = req.params
 
 try {
@@ -24,7 +24,36 @@ try {
     console.error("Error fetching session:", error.message);
     res.status(500).json({ message: 'Internal server error.' });
   }
-})
+})*/
+
+const getUserPaymentSession = asyncHandler(async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    // Find the session for the user
+    const session = await Session.findOne({ userId })
+      .populate({
+        path: 'communityId',
+        populate: {
+          path: 'owner.userId', // Populate the owner.userId inside the communityId
+          model: 'User'         // Make sure to specify the correct model for the user
+        }
+      });
+
+    // Check if a session exists
+    if (!session) {
+      return res.status(404).json({ message: 'No active session found.' });
+    }
+
+    // Return the session data along with populated community and owner info
+    res.status(200).json(session);
+  } catch (error) {
+    console.error("Error fetching session:", error.message);
+    res.status(500).json({ message: 'Internal server error.' });
+  }
+});
+
+
 
 
   const  getUserPayments  =  asyncHandler( async (req, res)  => {
