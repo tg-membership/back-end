@@ -33,7 +33,8 @@ const paymentSchema = new mongoose.Schema({
       default: Date.now 
     }, // Date of the transaction
     txHash: { 
-      type: String 
+      type: String,
+      required : true
     }, // Optional: Transaction ID from payment gateway
     remarks: { 
       type: String 
