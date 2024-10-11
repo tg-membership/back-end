@@ -18,7 +18,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: "https://www.usezap.xyz",
+    origin: ['*', "https://www.usezap.xyz"] ,
     methods: ["GET", "POST"],
     credentials: false
   }
@@ -27,7 +27,10 @@ const io = socketIo(server, {
 connectionDb();
 
 
-app.use(cors())
+app.use(cors({
+  origin: ['*', "https://www.usezap.xyz"], // Replace with your front-end URL
+  methods: ['GET', 'POST']
+}))
 app.use(express.json());
 /*app.use(session({
   secret: 'keyboard cat',
