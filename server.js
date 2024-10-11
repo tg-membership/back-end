@@ -24,14 +24,12 @@ const io = socketIo(server, {
   }
 });
 
-
-
 connectionDb();
 
 
 app.use(cors())
 app.use(express.json());
-app.use(session({
+/*app.use(session({
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: false,
@@ -39,7 +37,7 @@ app.use(session({
     secure: false,
     maxAge: 60000 * 60,
   }
-}));
+}));*/
 
 io.on('connection', (socket) => {
   console.log(`⚡: ${socket.id} user just connected!`);
