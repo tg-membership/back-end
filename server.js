@@ -87,7 +87,6 @@ const keyboard = InlineKeyboard.from([buttonRow]);*/
 
 
 bot.command("start", (ctx) =>  {
-  console.log("the context", ctx.from.first_name)
   const userId = ctx.match
   console.log("user id from ctx", ctx.chat)
 
@@ -152,21 +151,21 @@ bot.on("chat_member",  async (ctx) => {
  
     // Check if the user has joined as a "member"
   if (actionStatus === "member" || actionStatus === "creator") {
-    // Query your database to check if the user is subscribed
+    // Query  database to check if the user is subscribed
     const isSubscribed = await checkUserSubscription(userId, chatId);
 
     // If the user is subscribed
     if (isSubscribed) {
-      ctx.reply(`Welcome back! You're subscribed to this group.`);
+     await ctx.reply(`Welcome back! You’re all set and subscribed—enjoy the exclusive content!`);
     } 
     // If the user is not subscribed
     else {
 
       const   session = await createPaymentSession(userId, chatId);
 
-      console.log("the generated session ", session)
+      console.log("the generated payment session ", session)
       
-  await ctx.reply("Your not  subscriber please  click button below to subscribe", { reply_markup: payBtn })
+  await ctx.reply("You're not subscribed yet! Tap below to unlock full access and enjoy the exclusive content!", { reply_markup: payBtn })
 
     }}
  
@@ -193,8 +192,8 @@ bot.on("my_chat_member",  async (ctx) => {
 
         if (!existingUser) {
           // If the user is not registered, respond and do not proceed
-          await   ctx.api.sendMessage(userInfo.id, "Please  register inour platform before adding to your group")
-           ctx.reply(`Please register on the platform before adding me to your group.`);
+          await   ctx.api.sendMessage(userInfo.id, "It looks like you’re trying to connect the Zap Bot for managing recurring payments in your community, but you're not registered yet! Please visit usezap.xyz to create your free account and follow the easy steps to connect your group. If you encounter any issues, our support team is here to help and typically responds within minutes. Thank you")
+          await ctx.reply("It looks like you're trying to connect the Zap Bot for managing recurring payments in your community, but you're not registered yet! Please visit usezap.xyz to create your free account and follow the easy steps to connect your group. If you encounter any issues, our support team is here to help and typically responds within minutes. Thank you");
         }else {
  // If the user exists, proceed to save the group info
  console.log("User found, proceeding to save the group");
@@ -205,14 +204,10 @@ bot.on("my_chat_member",  async (ctx) => {
         ctx.reply("There was an error processing your request.");
       }
      }else if(actionStatus === "kicked"){
-     // ctx.reply("You  removed  the king");
+     await ctx.api.sendMessage(userInfo.id, "We've noticed you've removed the Zap Bot from your group. We'd love to understand why you decided to stop using our services. If there’s anything we can do to improve, please let us know! Your feedback helps us make things better for you and your community.");
      console.log("bot kicked out")
      }
 
-
-
-
-// ctx.reply("New  join attemp")
 })
 
 
@@ -374,9 +369,9 @@ console.log('Cron jobs initialized.');
 // Now that you specified how to handle messages, you can start your bo
 
 // Start the bot.
-bot.start({
+/*bot.start({
   allowed_updates: ["chat_member", "my_chat_member", "message" ],
-  });
+  });*/
 
 
 

@@ -2,6 +2,7 @@ const  asyncHandler =  require("express-async-handler")
 const Session = require("../models/session-schema")
 const Subscription = require("../models/subscription-schema")
 const Payment = require("../models/payment-schema")
+const { checkTxStatus } = require("../lib/checkTxStatus")
 
 
 
@@ -86,13 +87,13 @@ const getUserPaymentSession = asyncHandler(async (req, res) => {
   // Checkout function
 const checkoutSubscription = asyncHandler(async (req, res) => {
  // const {userId}  = req.params
-  const {userId, communityId, tier, amount, txHash } = req.body;
+  const {userId, communityId, tier, amount, txHash, startTime, stopTime } = req.body;
   const io = req.app.get('socketio');
 
 
   try {
     // Validate the input
-    if (!userId || !communityId || !tier || !amount || !txHash) {
+    if (!userId || !communityId || !tier || !amount || !txHash || !startTime || !stopTime) {
       io.emit('paymentStatus', {
         status : "FAILED",
       });
@@ -100,6 +101,8 @@ const checkoutSubscription = asyncHandler(async (req, res) => {
     }
 
     console.log("the community id", communityId)
+
+     
 
     // Step 1: Create a new payment entry (with status 'pending')
     const newPayment = await Payment.create({
@@ -110,9 +113,17 @@ const checkoutSubscription = asyncHandler(async (req, res) => {
       status: 'pending'
     });
 
+    io.emit('paymentStatus', {
+      status : "PENDING",
+      userId : userId,
+      communityId : communityId,
+      tier,
+      amount,
+    });
+
     // Example: Assuming tier has duration info in months
-    const startTime = Math.floor(Date.now() / 1000).toString();
-    const stopTime = Math.floor(Date.now() / 1000 + 60 * 60 * 24 * 30).toString();
+   // const startTime = Math.floor(Date.now() / 1000).toString();
+    //const stopTime = Math.floor(Date.now() / 1000 + 60 * 60 * 24 * 30).toString();
 
 
 
