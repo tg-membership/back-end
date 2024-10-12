@@ -165,7 +165,7 @@ const interval = setInterval(async () => {
 
   // Update payment status to 'completed' after the transaction
   newPayment.status = 'completed';
-  newPayment.txHash = transactionHash;
+  newPayment.txHash = txHash;
   await newPayment.save();
 
       //console.log("updated payment  info and status", updatedPaymentSession)
@@ -271,7 +271,7 @@ const interval = setInterval(async () => {
       communityId : communityId,
       tier,
       amount,
-      transactionHash
+      txHash
     });
 
     res.status(500).json({ message: 'Internal server error' });
