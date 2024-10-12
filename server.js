@@ -369,9 +369,9 @@ console.log('Cron jobs initialized.');
 // Now that you specified how to handle messages, you can start your bo
 
 // Start the bot.
-/*bot.start({
+bot.start({
   allowed_updates: ["chat_member", "my_chat_member", "message" ],
-  });*/
+  });
 
 
 
