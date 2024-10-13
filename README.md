@@ -1,0 +1,1 @@
+Telegram is evolving into a multi-purpose platform for creators—offering everything from live streaming to public/private channels. With 900 million daily active users, creators invest their prime time into producing exclusive content. We're bringing the Patreon model to Telegram Creators with real-time settlement—powered by Aptos for seamless payment processing.
